@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J.H. Ranch — Week 5 Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#ff3d7f; --orange:#ff8a00; --yellow:#ffd400; --lime:#7dff4a;
+    --cyan:#20e3ff; --violet:#a66bff; --ink:#f4f6ff; --muted:#b9c0dd;
+    --card:rgba(14,16,38,.78); --line:rgba(255,255,255,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:Inter,system-ui,sans-serif; color:var(--ink); line-height:1.6;
+    background:#06071a;
+  }
+  .bg{
+    position:fixed; inset:0; z-index:-1;
+    background:
+      linear-gradient(180deg, rgba(6,7,26,.35) 0%, rgba(6,7,26,.72) 45%, rgba(6,7,26,.94) 100%),
+      radial-gradient(1200px 600px at 10% 10%, rgba(255,61,127,.25), transparent 60%),
+      radial-gradient(1000px 600px at 90% 30%, rgba(32,227,255,.22), transparent 60%),
+      url("https://images.unsplash.com/photo-1549333580-4cb2c5c8e421?w=2000&q=75&fm=jpg") center 40% / cover no-repeat;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:0 16px 64px}
+  header{padding:72px 0 40px; text-align:center}
+  .kicker{
+    display:inline-block; font-weight:800; letter-spacing:.2em; text-transform:uppercase; font-size:.8rem;
+    padding:6px 14px; border-radius:999px; background:linear-gradient(90deg,var(--pink),var(--orange)); color:#fff;
+  }
+  h1{
+    font-family:Anton,Impact,sans-serif; font-weight:400; text-transform:uppercase;
+    font-size:clamp(2.6rem,9vw,5.6rem); line-height:.95; margin:18px 0 10px;
+    background:linear-gradient(90deg,var(--yellow),var(--orange) 35%,var(--pink) 65%,var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 4px 24px rgba(255,61,127,.35));
+  }
+  .sub{font-size:1.15rem; color:var(--muted); font-style:italic; margin:0}
+  h2{
+    font-family:Anton,Impact,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:.03em;
+    font-size:clamp(1.7rem,5vw,2.4rem); margin:56px 0 18px; display:flex; align-items:center; gap:12px;
+  }
+  h2::after{content:""; flex:1; height:4px; border-radius:4px; background:linear-gradient(90deg,var(--c,var(--cyan)),transparent)}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px)}
+
+  /* scoreboard */
+  .scores{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+  .score{border-left:6px solid var(--c); padding:16px 18px}
+  .row{display:flex; justify-content:space-between; gap:10px; align-items:baseline}
+  .row .t{font-weight:600}
+  .row .t small{color:var(--muted); font-weight:400}
+  .row .p{font-family:Anton,Impact,sans-serif; font-size:1.5rem; letter-spacing:.02em}
+  .win .p{color:var(--c)}
+  .lose{opacity:.6}
+  .margin{margin-top:8px; font-size:.8rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--c)}
+
+  /* matchups */
+  .match{margin-bottom:18px; border-top:5px solid var(--c)}
+  .match h3{margin:0 0 4px; font-size:1.25rem; line-height:1.3}
+  .match h3 .w{color:var(--c)}
+  .match h3 .vs{color:var(--muted); font-weight:400}
+  .match p{margin:12px 0 0; color:#e6e9fa}
+  .tag{display:inline-block; font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:999px; background:var(--c); color:#0b0c20}
+  strong{color:#fff}
+  em{color:var(--yellow); font-style:normal}
+
+  /* awards */
+  .awards{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+  .award{position:relative; overflow:hidden; padding:18px 18px 18px 18px}
+  .award::before{content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--c)}
+  .award .ic{font-size:1.8rem}
+  .award .lbl{font-size:.75rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--c); margin-top:4px}
+  .award .val{font-weight:600; margin-top:4px}
+
+  /* standings */
+  .tbl-wrap{overflow-x:auto; padding:0}
+  table{width:100%; border-collapse:collapse; font-size:.95rem; min-width:520px}
+  th,td{padding:12px 14px; text-align:left; border-bottom:1px solid var(--line)}
+  th{font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  td.n,th.n{text-align:right; font-variant-numeric:tabular-nums}
+  tr.top td:first-child{color:var(--yellow); font-weight:800}
+  tr.bot td{color:#ff9fb9}
+  .rank{display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.08); font-weight:800}
+  tr.top .rank{background:var(--yellow); color:#111}
+  tr.bot .rank{background:var(--pink); color:#fff}
+  .note{color:var(--muted); font-size:.85rem; margin:10px 2px 0}
+
+  /* preview */
+  .preview{list-style:none; margin:0; padding:0; display:grid; gap:12px}
+  .preview li{padding:16px 18px; border-left:6px solid var(--c)}
+  .preview b{color:var(--c)}
+
+  footer{margin-top:56px; text-align:center}
+  .signoff{font-family:Anton,Impact,sans-serif; font-size:clamp(1.3rem,4vw,1.8rem); text-transform:uppercase;
+    background:linear-gradient(90deg,var(--cyan),var(--lime)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .credit{color:var(--muted); font-size:.75rem; margin-top:18px}
+  .credit a{color:var(--muted)}
+
+  .c-pink{--c:var(--pink)} .c-orange{--c:var(--orange)} .c-yellow{--c:var(--yellow)}
+  .c-lime{--c:var(--lime)} .c-cyan{--c:var(--cyan)} .c-violet{--c:var(--violet)}
+</style>
+</head>
+<body>
+<div class="bg" role="img" aria-label="Football stadium lit up at night"></div>
+<div class="wrap">
+
+<header>
+  <span class="kicker">J.H. Ranch · Week 5</span>
+  <h1>Benches, Blowouts &amp; a Bucket on Top</h1>
+  <p class="sub">In which several managers discover the bench is not a trophy case.</p>
+</header>
+
+<h2 class="c-yellow" style="--c:var(--yellow)">📊 The Scoreboard</h2>
+<div class="scores">
+  <div class="card score c-lime">
+    <div class="row win"><span class="t">No Niners No Problems <small>Phil</small></span><span class="p">150.64</span></div>
+    <div class="row lose"><span class="t">Quant <small>Dion</small></span><span class="p">83.84</span></div>
+    <div class="margin">+66.80 · Blowout of the week</div>
+  </div>
+  <div class="card score c-cyan">
+    <div class="row win"><span class="t">Cyclospora <small>Alex</small></span><span class="p">143.78</span></div>
+    <div class="row lose"><span class="t">Hard Count Laura <small>Laura</small></span><span class="p">93.50</span></div>
+    <div class="margin">+50.28</div>
+  </div>
+  <div class="card score c-orange">
+    <div class="row win"><span class="t">Chingados Unidos <small>John</small></span><span class="p">132.36</span></div>
+    <div class="row lose"><span class="t">Mom <small>Sarah</small></span><span class="p">116.88</span></div>
+    <div class="margin">+15.48</div>
+  </div>
+  <div class="card score c-violet">
+    <div class="row win"><span class="t">Stale <small>Owen</small></span><span class="p">111.72</span></div>
+    <div class="row lose"><span class="t">I… am no longer sure <small>Dara</small></span><span class="p">91.90</span></div>
+    <div class="margin">+19.82</div>
+  </div>
+  <div class="card score c-yellow">
+    <div class="row win"><span class="t">Tater Surprise <small>Travis</small></span><span class="p">109.84</span></div>
+    <div class="row lose"><span class="t">Portland Puddle Boys <small>Tyler</small></span><span class="p">101.44</span></div>
+    <div class="margin">+8.40</div>
+  </div>
+  <div class="card score c-pink">
+    <div class="row win"><span class="t">The White Bucket <small>Galen</small></span><span class="p">106.84</span></div>
+    <div class="row lose"><span class="t">Mini Me <small>George</small></span><span class="p">100.50</span></div>
+    <div class="margin">+6.34 · Closest game</div>
+  </div>
+</div>
+
+<h2 style="--c:var(--pink)">🏆 Matchup Breakdowns</h2>
+
+<article class="card match c-lime">
+  <span class="tag">Blowout</span>
+  <h3><span class="w">No Niners No Problems 150.64</span> <span class="vs">vs</span> Quant 83.84</h3>
+  <p>Phil dropped the week's high score, which is impressive. It's more impressive that he did it with <strong>Drake Maye's 39.46 points sitting on his bench</strong>. He started Jared Goff (28.94) instead, so the optimal lineup would have cleared 160. Phil left a whole tight end's worth of points on the pine and still won by 66.80, the biggest blowout of the week. Jaylen Warren (33.80), Christian Watson (29.30), and Malik Nabers (23.60) did the heavy lifting.</p>
+  <p>Dion, meanwhile, rolled out Justin Herbert (11.24) while Malik Willis put up 20.88 on the bench. Justin Jefferson added 15.80 of decorative bench points. None of it would have mattered. Quant falls to 1-4, and <em>the model is recommending a rebuild.</em></p>
+</article>
+
+<article class="card match c-cyan">
+  <span class="tag">Mercy rule</span>
+  <h3><span class="w">Cyclospora 143.78</span> <span class="vs">vs</span> Hard Count Laura 93.50</h3>
+  <p>Alex rode Jahmyr Gibbs (35.20, best starter in the league this week) and Jordan Love (25.28) to a comfortable 50-point win. Don't hand out the Coach of the Year award just yet, though. Alex started Rome Odunze in the flex for 3.50 points while MarShawn Lloyd put up 16.20 on the bench. It's easy to look smart when your opponent is trying even harder to lose.</p>
+  <p>Laura is now <strong>0-5</strong>. She started Joe Burrow (24.60) over Jayden Daniels (32.26). She also started Jordan Addison, who scored a crisp, clean <strong>0.00</strong>, while Pat Freiermuth put up 19.00 on her bench. <em>The team name is starting to feel less like a joke and more like a diagnosis.</em></p>
+</article>
+
+<article class="card match c-orange">
+  <span class="tag">Bucky ball</span>
+  <h3><span class="w">Chingados Unidos 132.36</span> <span class="vs">vs</span> Mom 116.88</h3>
+  <p>Bucky Irving went off for 30.50 out of the flex, and John's whole lineup showed up. Sarah got a surprise 25.78 from <em>Jacoby Brissett</em> and 22.80 from Mike Evans. Then Carnell Tate contributed 1.10 points, which is roughly what you get for standing near a football. Mom drops to 2-3, and John stays hot at 4-1.</p>
+</article>
+
+<article class="card match c-violet">
+  <span class="tag">Boring works</span>
+  <h3><span class="w">Stale 111.72</span> <span class="vs">vs</span> I… am no longer sure 91.90</h3>
+  <p>Owen ran the boring, effective formula: Stafford (27.32), James Cook (22.30), Derrick Henry (20.50).</p>
+  <p>Dara got 31.50 from Josh Allen in an overtime thriller. She also got 1.90 from CeeDee Lamb and 3.80 from Jaylen Waddle, with 64.64 points sitting on her bench. The good news: run the optimal lineup and she <strong>still</strong> loses by 1.42. <em>The team name has never been more accurate.</em></p>
+</article>
+
+<article class="card match c-yellow">
+  <span class="tag">Kicker szn</span>
+  <h3><span class="w">Tater Surprise 109.84</span> <span class="vs">vs</span> Portland Puddle Boys 101.44</h3>
+  <p>After eating last week's 64-point blowout, the Commish bounced back thanks to… <strong>kicker Spencer Shrader with 21.00 points.</strong> Truly the most Travis way to win a football game. Parker Washington (27.40) and Jaxon Smith-Njigba (20.30) helped too, but we all know who the real MVP was.</p>
+  <p>Tyler got 29.20 from Puka Nacua but started Stefon Diggs in the flex for a goose egg. Portland's two-game win streak washes away.</p>
+</article>
+
+<article class="card match c-pink">
+  <span class="tag">Heartbreaker</span>
+  <h3><span class="w">The White Bucket 106.84</span> <span class="vs">vs</span> Mini Me 100.50</h3>
+  <p><strong>Galen</strong> stays in first place, mostly thanks to Isaiah Likely (26.90) and Ka'imi Fairbairn (17.00). This came during a weekend in which Galen made three roster moves before kickoff. He dropped Tyreek Hill, picked up and then cut Tre' Harris within about six hours, and grabbed Bryce Young. The man treats the waiver wire like a group chat. He leads the league with 11 moves, and somehow it's working.</p>
+  <p>George, I'm so sorry. You lost by <strong>6.34</strong>. Jameson Williams scored <strong>17.70 on your bench</strong> while Deebo Samuel scored 1.50 in your lineup. That one swap flips the result. Mini Me falls to 3-2, and <em>George will be thinking about this until at least Thursday.</em></p>
+</article>
+
+<h2 style="--c:var(--orange)">🎖️ Weekly Awards</h2>
+<div class="awards">
+  <div class="card award c-orange"><div class="ic">🔥</div><div class="lbl">Top Score</div><div class="val">No Niners No Problems, 150.64</div></div>
+  <div class="card award c-cyan"><div class="ic">🧊</div><div class="lbl">Bottom Score</div><div class="val">Quant, 83.84</div></div>
+  <div class="card award c-lime"><div class="ic">💥</div><div class="lbl">Biggest Blowout</div><div class="val">NNNP over Quant by 66.80</div></div>
+  <div class="card award c-pink"><div class="ic">😬</div><div class="lbl">Closest Game</div><div class="val">White Bucket over Mini Me by 6.34</div></div>
+  <div class="card award c-yellow"><div class="ic">🌟</div><div class="lbl">Best Starter</div><div class="val">Jahmyr Gibbs, 35.20 (Cyclospora)</div></div>
+  <div class="card award c-violet"><div class="ic">🪑</div><div class="lbl">Benchwarmer of the Week</div><div class="val">Drake Maye, 39.46 — on Phil's bench</div></div>
+  <div class="card award c-pink"><div class="ic">🥚</div><div class="lbl">Goose Egg Award</div><div class="val">Jordan Addison &amp; Stefon Diggs, 0.00 each, both starting</div></div>
+  <div class="card award c-yellow"><div class="ic">🦵</div><div class="lbl">Unlikely Hero</div><div class="val">Spencer Shrader, the kicker who won the Commish a football game</div></div>
+  <div class="card award c-cyan"><div class="ic">💔</div><div class="lbl">Should've Started Him</div><div class="val">George: Jameson Williams (17.70) over Deebo (1.50) in a 6.34-point loss</div></div>
+</div>
+
+<h2 style="--c:var(--lime)">📈 Standings After Week 5</h2>
+<div class="card tbl-wrap">
+<table>
+  <thead><tr><th>#</th><th>Team</th><th>Manager</th><th class="n">W-L</th><th class="n">PF</th></tr></thead>
+  <tbody>
+    <tr class="top"><td><span class="rank">1</span></td><td>The White Bucket</td><td>Galen</td><td class="n">4-1</td><td class="n">573.92</td></tr>
+    <tr><td><span class="rank">2</span></td><td>Chingados Unidos</td><td>John</td><td class="n">4-1</td><td class="n">565.94</td></tr>
+    <tr><td><span class="rank">3</span></td><td>Cyclospora</td><td>Alex</td><td class="n">3-2</td><td class="n">595.46</td></tr>
+    <tr><td><span class="rank">4</span></td><td>No Niners No Problems</td><td>Phil</td><td class="n">3-2</td><td class="n">584.80</td></tr>
+    <tr><td><span class="rank">5</span></td><td>Stale</td><td>Owen</td><td class="n">3-2</td><td class="n">546.06</td></tr>
+    <tr><td><span class="rank">6</span></td><td>Tater Surprise</td><td>Travis</td><td class="n">3-2</td><td class="n">522.64</td></tr>
+    <tr><td><span class="rank">7</span></td><td>Mini Me</td><td>George</td><td class="n">3-2</td><td class="n">510.92</td></tr>
+    <tr><td><span class="rank">8</span></td><td>Mom</td><td>Sarah</td><td class="n">2-3</td><td class="n">543.06</td></tr>
+    <tr><td><span class="rank">9</span></td><td>Portland Puddle Boys</td><td>Tyler</td><td class="n">2-3</td><td class="n">541.66</td></tr>
+    <tr><td><span class="rank">10</span></td><td>I… am no longer sure</td><td>Dara</td><td class="n">2-3</td><td class="n">520.56</td></tr>
+    <tr><td><span class="rank">11</span></td><td>Quant</td><td>Dion</td><td class="n">1-4</td><td class="n">447.28</td></tr>
+    <tr class="bot"><td><span class="rank">12</span></td><td>Hard Count Laura</td><td>Laura</td><td class="n">0-5</td><td class="n">441.70</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">Unofficial: sorted by wins, then points for. Yahoo will make it official after stat corrections. A five-way logjam at 3-2 means nobody in the middle of the table should feel safe. Cyclospora and NNNP lead the league in points scored, which is either a sign of things to come or a statistical cry for help.</p>
+
+<h2 style="--c:var(--violet)">🔮 Week 6 Preview</h2>
+<ul class="preview">
+  <li class="card c-pink"><b>Hard Count Laura vs. The White Bucket.</b> The 0-5 team draws the 4-1 waiver-wire maniac. Laura, this is your <em>Rocky</em> moment. Please start the guy who scores points.</li>
+  <li class="card c-orange"><b>Chingados Unidos vs. Tater Surprise.</b> John's hot streak meets the Commish's kicker-dependent offense.</li>
+  <li class="card c-cyan"><b>Cyclospora vs. I… am no longer sure.</b> Dara would at least like to be sure about her lineup this time.</li>
+  <li class="card c-yellow"><b>Mini Me vs. Portland Puddle Boys.</b> George, play Jameson Williams. We're begging you.</li>
+  <li class="card c-lime"><b>Mom vs. No Niners No Problems.</b> Phil, start Drake Maye. Sarah, please don't let him read this.</li>
+  <li class="card c-violet"><b>Quant vs. Stale.</b> Owen's steady machine vs. Dion's desperation. Whoever loses has to explain their team name.</li>
+</ul>
+
+<footer>
+  <div class="signoff">Set your lineups. Check your bench. Remember George. 🫡</div>
+  <div class="credit">Background photo by <a href="https://unsplash.com/photos/a-stadium-lit-up-at-night-with-a-lot-of-lights-GCEAqghDxRo">Christopher Alvarenga</a> on Unsplash.</div>
+</footer>
+
+</div>
+</body>
+</html>
